@@ -1,42 +1,46 @@
 #!/bin/bash
+###############################################################
+SPONSORHEADER='n'
+CADDY_BIN='/usr/local/bin/caddy'
+###############################################################
 
 # Dictionary with plugin name as key, URL as value
 declare -A plugins_urls=(
-    ["realip"]="github.com/captncraig/caddy-realip"
-    ["git"]="github.com/abiosoft/caddy-git"
-    ["proxyprotocol"]="github.com/mastercactapus/caddy-proxyprotocol"
-    ["locale"]="github.com/simia-tech/caddy-locale"
-    ["cache"]="github.com/nicolasazrak/caddy-cache"
     ["authz"]="github.com/casbin/caddy-authz"
-    ["filter"]="github.com/echocat/caddy-filter"
-    ["minify"]="github.com/hacdias/caddy-minify"
-    ["ipfilter"]="github.com/pyed/ipfilter"
-    ["ratelimit"]="github.com/xuqingfeng/caddy-rate-limit"
-    ["search"]="github.com/pedronasser/caddy-search"
-    ["expires"]="github.com/epicagency/caddy-expires"
-    ["cors"]="github.com/captncraig/cors/caddy"
-    ["nobots"]="github.com/Xumeiquer/nobots"
-    ["login"]="github.com/tarent/loginsrv/caddy"
-    ["reauth"]="github.com/freman/caddy-reauth"
-    ["jwt"]="github.com/BTBurke/caddy-jwt"
-    ["jsonp"]="github.com/pschlump/caddy-jsonp"
-    ["upload"]="blitznote.com/src/caddy.upload"
-    ["multipass"]="github.com/namsral/multipass/caddy"
-    ["datadog"]="github.com/payintech/caddy-datadog"
-    ["prometheus"]="github.com/miekg/caddy-prometheus"
-    ["cgi"]="github.com/jung-kurt/caddy-cgi"
-    ["filemanager"]="github.com/hacdias/filemanager/caddy/filemanager"
-    ["iyofilemanager"]="github.com/itsyouonline/filemanager/caddy/filemanager"
-    ["webdav"]="github.com/hacdias/caddy-webdav"
-    ["jekyll"]="github.com/hacdias/filemanager/caddy/jekyll"
-    ["hugo"]="github.com/hacdias/filemanager/caddy/hugo"
-    ["mailout"]="github.com/SchumacherFM/mailout"
     ["awses"]="github.com/miquella/caddy-awses"
     ["awslambda"]="github.com/coopernurse/caddy-awslambda"
-    ["grpc"]="github.com/pieterlouw/caddy-grpc"
+    ["cache"]="github.com/nicolasazrak/caddy-cache"
+    ["cgi"]="github.com/jung-kurt/caddy-cgi"
+    ["cors"]="github.com/captncraig/cors/caddy"
+    ["datadog"]="github.com/payintech/caddy-datadog"
+    ["expires"]="github.com/epicagency/caddy-expires"
+    ["filemanager"]="github.com/hacdias/filemanager/caddy/filemanager"
+    ["filter"]="github.com/echocat/caddy-filter"
+    ["git"]="github.com/abiosoft/caddy-git"
     ["gopkg"]="github.com/zikes/gopkg"
-    ["restic"]="github.com/restic/caddy"
+    ["grpc"]="github.com/pieterlouw/caddy-grpc"
+    ["hugo"]="github.com/hacdias/filemanager/caddy/hugo"
+    ["ipfilter"]="github.com/pyed/ipfilter"
     ["iyo"]="github.com/itsyouonline/caddy-integration/oauth"
+    ["iyofilemanager"]="github.com/itsyouonline/filemanager/caddy/filemanager"
+    ["jekyll"]="github.com/hacdias/filemanager/caddy/jekyll"
+    ["jsonp"]="github.com/pschlump/caddy-jsonp"
+    ["jwt"]="github.com/BTBurke/caddy-jwt"
+    ["locale"]="github.com/simia-tech/caddy-locale"
+    ["login"]="github.com/tarent/loginsrv/caddy"
+    ["mailout"]="github.com/SchumacherFM/mailout"
+    ["minify"]="github.com/hacdias/caddy-minify"
+    ["multipass"]="github.com/namsral/multipass/caddy"
+    ["nobots"]="github.com/Xumeiquer/nobots"
+    ["prometheus"]="github.com/miekg/caddy-prometheus"
+    ["proxyprotocol"]="github.com/mastercactapus/caddy-proxyprotocol"
+    ["ratelimit"]="github.com/xuqingfeng/caddy-rate-limit"
+    ["realip"]="github.com/captncraig/caddy-realip"
+    ["reauth"]="github.com/freman/caddy-reauth"
+    ["restic"]="github.com/restic/caddy"
+    ["search"]="github.com/pedronasser/caddy-search"
+    ["upload"]="blitznote.com/src/caddy.upload"
+    ["webdav"]="github.com/hacdias/caddy-webdav"
 )
 
 # Dictionary with plugin name as key, directive as value
@@ -146,6 +150,19 @@ rebuild_caddy(){
     go get -v github.com/caddyserver/builds
     echo "Ensure caddy build system dependencies [SUCCESS]"
 
+    if [[ "$SPONSORHEADER" = [Nn] ]]; then
+        SERVERGOPATH="$GOPATH/src/github.com/mholt/caddy/caddyhttp/httpserver/server.go"
+        if [[ -f "$SERVERGOPATH" && "$(grep 'Caddy-Sponsors' "$SERVERGOPATH")" && "$(grep 'sponsors' "$SERVERGOPATH")" ]]; then
+            sed -ie "/sponsors :/d" "$SERVERGOPATH"
+            sed -ie '/Header().Set("Caddy-Sponsors/d' "$SERVERGOPATH"
+            if [[ ! "$(grep 'Caddy-Sponsors' "$SERVERGOPATH")" ]]; then
+                echo "Removing HTTP Sponsor Header [SUCCESS]"
+            elif [[ "$(grep 'Caddy-Sponsors' "$SERVERGOPATH")" ]]; then
+                echo "HTTP Sponsor Header Still Detected [FAILED]"
+            fi
+        fi
+    fi
+
     echo -ne "Rebuilding caddy binary\r"
     go run build.go
     echo "Rebuilding caddy binary [SUCCESS]"
@@ -158,15 +175,25 @@ rebuild_caddy(){
         echo "Caddy is Running .. Stopping process [SUCCESS]"
     fi
 
-    cp caddy /$GOPATH/bin
+    cp caddy "$GOPATH/bin"
 
     if [ ! $? == 0 ]; then
 
         exit $?
     else
-        echo -n "Copying caddy binary to /$GOPATH/bin [SUCCESS]"
+        echo -n "Copying caddy binary to $GOPATH/bin [SUCCESS]"
         echo ""
     fi
+
+    cp caddy "$CADDY_BIN"
+
+    if [ ! $? == 0 ]; then
+
+        exit $?
+    else
+        echo -n "Copying caddy binary to "$CADDY_BIN" [SUCCESS]"
+        echo ""
+    fi    
 }
 
 install(){
