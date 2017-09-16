@@ -163,7 +163,28 @@ rebuild_caddy(){
         fi
     fi
 
+    if [[ -f /opt/rh/devtoolset-7/root/usr/bin/gcc && -f /opt/rh/devtoolset-7/root/usr/bin/g++ ]]; then
+        source /opt/rh/devtoolset-7/enable
+    elif [[ -f /opt/rh/devtoolset-6/root/usr/bin/gcc && -f /opt/rh/devtoolset-6/root/usr/bin/g++ ]]; then
+        source /opt/rh/devtoolset-6/enable
+    elif [[ -f /opt/rh/devtoolset-4/root/usr/bin/gcc && -f /opt/rh/devtoolset-4/root/usr/bin/g++ ]]; then
+        source /opt/rh/devtoolset-4/enable
+    fi
+    if [[ "$(uname -m)" = 'x86_64' ]]; then
+        OS_ARCH='64'
+    else
+        OS_ARCH='32'
+    fi
+
     echo -ne "Rebuilding caddy binary\r"
+    export CC="gcc"
+    export CXX="g++"
+    export GOGCCFLAGS="-fPIC -m${OS_ARCH} -pthread -fmessage-length=0"
+    export CGO_CFLAGS="-g -O2"
+    export CGO_CPPFLAGS=""
+    export CGO_CXXFLAGS="-g -O2"
+    export CGO_FFLAGS="-g -O2"
+    export CGO_LDFLAGS="-g -O2"
     go run build.go
     echo "Rebuilding caddy binary [SUCCESS]"
 
@@ -175,7 +196,7 @@ rebuild_caddy(){
         echo "Caddy is Running .. Stopping process [SUCCESS]"
     fi
 
-    cp caddy "$GOPATH/bin"
+    \cp -f caddy "$GOPATH/bin"
 
     if [ ! $? == 0 ]; then
 
@@ -185,7 +206,7 @@ rebuild_caddy(){
         echo ""
     fi
 
-    cp caddy "$CADDY_BIN"
+    \cp -f caddy "$CADDY_BIN"
 
     if [ ! $? == 0 ]; then
 
@@ -193,7 +214,28 @@ rebuild_caddy(){
     else
         echo -n "Copying caddy binary to "$CADDY_BIN" [SUCCESS]"
         echo ""
-    fi    
+    fi
+
+    export CC="gcc"
+    export CXX="g++"
+    export GOGCCFLAGS="-fPIC -m${OS_ARCH} -pthread -fmessage-length=0"
+    export CGO_CFLAGS="-g -O3"
+    export CGO_CPPFLAGS=""
+    export CGO_CXXFLAGS="-g -O3"
+    export CGO_FFLAGS="-g -O3"
+    export CGO_LDFLAGS="-g -O3"
+    go run build.go
+    echo "Rebuilding caddy binary optimized [SUCCESS]"
+
+    \cp -f caddy "${CADDY_BIN}-custom"
+
+    if [ ! $? == 0 ]; then
+
+        exit $?
+    else
+        echo -n "Copying caddy optimized binary to "${CADDY_BIN}-custom" [SUCCESS]"
+        echo ""
+    fi
 }
 
 install(){
