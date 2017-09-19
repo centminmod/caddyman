@@ -22,7 +22,6 @@ declare -A plugins_urls=(
     ["hugo"]="github.com/hacdias/filemanager/caddy/hugo"
     ["ipfilter"]="github.com/pyed/ipfilter"
     ["iyo"]="github.com/itsyouonline/caddy-integration/oauth"
-    ["iyofilemanager"]="github.com/itsyouonline/filemanager/caddy/filemanager"
     ["jekyll"]="github.com/hacdias/filemanager/caddy/jekyll"
     ["jsonp"]="github.com/pschlump/caddy-jsonp"
     ["jwt"]="github.com/BTBurke/caddy-jwt"
