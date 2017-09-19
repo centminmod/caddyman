@@ -165,10 +165,23 @@ rebuild_caddy(){
 
     if [[ -f /opt/rh/devtoolset-7/root/usr/bin/gcc && -f /opt/rh/devtoolset-7/root/usr/bin/g++ ]]; then
         source /opt/rh/devtoolset-7/enable
+        CUSTOM_GCCCOMPILED='y'
     elif [[ -f /opt/rh/devtoolset-6/root/usr/bin/gcc && -f /opt/rh/devtoolset-6/root/usr/bin/g++ ]]; then
         source /opt/rh/devtoolset-6/enable
+        CUSTOM_GCCCOMPILED='y'
     elif [[ -f /opt/rh/devtoolset-4/root/usr/bin/gcc && -f /opt/rh/devtoolset-4/root/usr/bin/g++ ]]; then
         source /opt/rh/devtoolset-4/enable
+        CUSTOM_GCCCOMPILED='y'
+    fi
+    if [[ -f /opt/sbin/llvm-release_50/bin/clang && -f /opt/sbin/llvm-release_50/bin/clang++ ]]; then
+        CLANG_BIN='/opt/sbin/llvm-release_50/bin/clang'
+        CUSTOM_CLANGCOMPILED='y'
+    elif [[ -f /opt/sbin/llvm-release_40/bin/clang && -f /opt/sbin/llvm-release_40/bin/clang++ ]]; then
+        CLANG_BIN='/opt/sbin/llvm-release_40/bin/clang'
+        CUSTOM_CLANGCOMPILED='y'
+    elif [[ -f /opt/rh/llvm-toolset-7/root/usr/bin/clang && -f /opt/rh/llvm-toolset-7/root/usr/bin/clang++ ]]; then
+        CLANG_BIN='/opt/rh/llvm-toolset-7/root/usr/bin/clang'
+        CUSTOM_CLANGCOMPILED='y'
     fi
     if [[ "$(uname -m)" = 'x86_64' ]]; then
         OS_ARCH='64'
@@ -196,6 +209,7 @@ rebuild_caddy(){
         echo "Caddy is Running .. Stopping process [SUCCESS]"
     fi
 
+    ##############################################################
     \cp -f caddy "$GOPATH/bin"
 
     if [ ! $? == 0 ]; then
@@ -206,6 +220,7 @@ rebuild_caddy(){
         echo ""
     fi
 
+    ##############################################################
     \cp -f caddy "$CADDY_BIN"
 
     if [ ! $? == 0 ]; then
@@ -216,26 +231,55 @@ rebuild_caddy(){
         echo ""
     fi
 
-    export CC="gcc"
-    export CXX="g++"
-    export GOGCCFLAGS="-fPIC -m${OS_ARCH} -pthread -fmessage-length=0"
-    export CGO_CFLAGS="-g -O3"
-    export CGO_CPPFLAGS=""
-    export CGO_CXXFLAGS="-g -O3"
-    export CGO_FFLAGS="-g -O3"
-    export CGO_LDFLAGS="-g -O3"
-    go run build.go
-    echo "Rebuilding caddy binary optimized [SUCCESS]"
-
-    \cp -f caddy "${CADDY_BIN}-custom"
-
-    if [ ! $? == 0 ]; then
-
-        exit $?
-    else
-        echo -n "Copying caddy optimized binary to "${CADDY_BIN}-custom" [SUCCESS]"
-        echo ""
+    ##############################################################
+    if [[ "$CUSTOM_GCCCOMPILED" = [yY] ]]; then
+        export CC="gcc"
+        export CXX="g++"
+        export GOGCCFLAGS="-fPIC -m${OS_ARCH} -pthread -fmessage-length=0"
+        export CGO_CFLAGS="-g -O3"
+        export CGO_CPPFLAGS=""
+        export CGO_CXXFLAGS="-g -O3"
+        export CGO_FFLAGS="-g -O3"
+        export CGO_LDFLAGS="-g -O3"
+    
+        go run build.go
+        echo "Rebuilding caddy binary GCC optimized [SUCCESS]"
+    
+        \cp -f caddy "${CADDY_BIN}-custom"
+    
+        if [ ! $? == 0 ]; then
+    
+            exit $?
+        else
+            echo -n "Copying caddy GCC optimized binary to "${CADDY_BIN}-custom" [SUCCESS]"
+            echo ""
+        fi
     fi
+    ##############################################################
+    if [[ "$CUSTOM_CLANGCOMPILED" = [yY] ]]; then
+        export CC="${CLANG_BIN}"
+        export CXX="${CLANG_BIN}++"
+        export GOGCCFLAGS="-fPIC -m${OS_ARCH} -pthread -fmessage-length=0"
+        export CGO_CFLAGS="-g -O3"
+        export CGO_CPPFLAGS=""
+        export CGO_CXXFLAGS="-g -O3"
+        export CGO_FFLAGS="-g -O3"
+        export CGO_LDFLAGS="-g -O3"
+    
+        go run build.go
+        echo "Rebuilding caddy binary Clang optimized [SUCCESS]"
+    
+        \cp -f caddy "${CADDY_BIN}-clang"
+    
+        if [ ! $? == 0 ]; then
+    
+            exit $?
+        else
+            echo -n "Copying caddy Clang optimized binary to "${CADDY_BIN}-clang" [SUCCESS]"
+            echo ""
+        fi
+    fi
+    ##############################################################
 }
 
 install(){
