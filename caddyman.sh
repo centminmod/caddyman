@@ -211,6 +211,7 @@ rebuild_caddy(){
     ##############################################################
     \cp -f caddy "$CADDY_BIN"
     strip "$CADDY_BIN"
+    setcap 'cap_net_bind_service=+ep' "$CADDY_BIN"
 
     if [ ! $? == 0 ]; then
 
@@ -258,6 +259,7 @@ rebuild_caddy(){
         
             \cp -f caddy "${CADDY_BIN}${SUFFIX}"
             strip "${CADDY_BIN}${SUFFIX}"
+            setcap 'cap_net_bind_service=+ep' "${CADDY_BIN}${SUFFIX}"
         
             if [ ! $? == 0 ]; then
         
@@ -306,6 +308,7 @@ rebuild_caddy(){
         
             \cp -f caddy "${CADDY_BIN}${SUFFIX}"
             strip "${CADDY_BIN}${SUFFIX}"
+            setcap 'cap_net_bind_service=+ep' "${CADDY_BIN}${SUFFIX}"
         
             if [ ! $? == 0 ]; then
         
