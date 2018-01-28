@@ -10,12 +10,14 @@ chmod 0770 /etc/ssl/caddy
 rm -rf /etc/systemd/system/caddy.service
 wget https://github.com/mholt/caddy/raw/master/dist/init/linux-systemd/caddy.service -O /etc/systemd/system/caddy.service
 cat /etc/systemd/system/caddy.service
+sed -i 's|ProtectHome=true|ProtectHome=false|' /etc/systemd/system/caddy.service
 sed -i 's|User=www-data|User=nginx|' /etc/systemd/system/caddy.service
 sed -i 's|Group=www-data|Group=nginx|g' /etc/systemd/system/caddy.service
 sed -i 's|NoNewPrivileges=true|NoNewPrivileges=false|'  /etc/systemd/system/caddy.service
 #sed -i 's|ProtectSystem=full|ProtectSystem=full|' /etc/systemd/system/caddy.service
 sed -i "s|ReadWriteDirectories=\/etc\/ssl\/caddy|ReadWriteDirectories=\/etc\/ssl\/caddy\nReadWriteDirectories=\/usr\/local\/nginx|" /etc/systemd/system/caddy.service
 sed -i "s|ReadWriteDirectories=\/etc\/ssl\/caddy|ReadWriteDirectories=\/etc\/ssl\/caddy\nReadWriteDirectories=\/usr\/local\/nginx\/logs|" /etc/systemd/system/caddy.service
+sed -i "s|ReadWriteDirectories=\/etc\/ssl\/caddy|ReadWriteDirectories=\/etc\/ssl\/caddy\nReadWriteDirectories=\/home\/nginx\/domains|" /etc/systemd/system/caddy.service
 sed -i "s|Wants=network-online.target systemd-networkd-wait-online.service|Wants=network-online.target|" /etc/systemd/system/caddy.service
 <!-- sed -i 's|;CapabilityBoundingSet=CAP_NET_BIND_SERVICE|CapabilityBoundingSet=CAP_NET_BIND_SERVICE|' /etc/systemd/system/caddy.service -->
 <!-- sed -i 's|;AmbientCapabilities=CAP_NET_BIND_SERVICE|AmbientCapabilities=CAP_NET_BIND_SERVICE|' /etc/systemd/system/caddy.service -->
@@ -77,6 +79,9 @@ chmod 0666 /usr/local/nginx/logs/caddy-mainhost-access.nossl.log
 
 /usr/local/bin/caddy -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp -validate
 
+setcap 'cap_net_bind_service=+ep' /usr/local/bin/caddy
+setcap 'cap_net_bind_service=+ep' /usr/local/bin/caddy-gcc7
+setcap 'cap_net_bind_service=+ep' /usr/local/bin/caddy-clang4
 systemctl daemon-reload
 systemctl start caddy.service
 systemctl status caddy.service
@@ -89,7 +94,8 @@ tail -100 /usr/local/nginx/logs/caddy-mainhost-access.nossl.log
 ```
 
 ```
-alias caddyconf='nano /etc/systemd/system/caddy.service'
+alias caddysys='nano /etc/systemd/system/caddy.service'
+alias caddyconf='nano /etc/caddy/Caddyfile'
 alias caddyrestart='systemctl daemon-reload; systemctl start caddy.service; systemctl status caddy.service;'
 ```
 
@@ -132,7 +138,7 @@ PrivateTmp=true
 ; Use a minimal /dev
 PrivateDevices=true
 ; Hide /home, /root, and /run/user. Nobody will steal your SSH-keys.
-ProtectHome=true
+ProtectHome=false
 ; Make /usr, /boot, /etc and possibly some more folders read-only.
 ProtectSystem=full
 ; … except /etc/ssl/caddy, because we want Letsencrypt-certificates there.
@@ -140,6 +146,7 @@ ProtectSystem=full
 ReadWriteDirectories=/etc/ssl/caddy
 ReadWriteDirectories=/usr/local/nginx/logs
 ReadWriteDirectories=/usr/local/nginx
+ReadWriteDirectories=/home/nginx/domains
 
 ; The following additional security directives only work with systemd v229 or later.
 ; They further retrict privileges that can be gained by caddy. Uncomment if you like.
