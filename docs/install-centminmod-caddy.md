@@ -89,6 +89,11 @@ tail -100 /usr/local/nginx/logs/caddy-mainhost-access.nossl.log
 ```
 
 ```
+alias caddyconf='nano /etc/systemd/system/caddy.service'
+alias caddyrestart='systemctl daemon-reload; systemctl start caddy.service; systemctl status caddy.service;'
+```
+
+```
 cat /etc/systemd/system/caddy.service
 [Unit]
 Description=Caddy HTTP/2 web server
@@ -108,6 +113,8 @@ Environment=CADDYPATH=/etc/ssl/caddy
 
 ; Always set "-root" to something safe in case it gets forgotten in the Caddyfile.
 ExecStart=/usr/local/bin/caddy -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
+; ExecStart=/usr/local/bin/caddy-gcc7 -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
+; ExecStart=/usr/local/bin/caddy-clang4 -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
 ExecReload=/bin/kill -USR1 $MAINPID
 
 ; Use graceful shutdown with a reasonable timeout
@@ -143,4 +150,113 @@ ReadWriteDirectories=/usr/local/nginx
 
 [Install]
 WantedBy=multi-user.target
+```
+
+Additional Caddy instances for caddy-gcc7 and caddy-clang4 built binaries
+
+```
+cp -a /etc/systemd/system/caddy.service /etc/systemd/system/caddy8080.service
+cp -a /etc/systemd/system/caddy.service /etc/systemd/system/caddy8081.service
+sed -i 's|||' /etc/systemd/system/caddy8080.service
+sed -i 's|||' /etc/systemd/system/caddy8081.service
+```
+
+```
+caddy_hostname=$(hostname -f)
+cat >/etc/caddy/Caddyfile8080<<EOF
+$caddy_hostname:8081 {
+    gzip {
+        level 6
+        min_length 1400
+    }
+    browse
+    header / {
+        #Strict-Transport-Security "max-age=31536000"
+        #Cache-Control "max-age=86400"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        X-XSS-Protection "1; mode=block"
+        X-Powered-By "Caddy via CentminMod"
+        #-Server
+    }
+    timeouts {
+    read   10s
+    header 10s
+    write  20s
+    idle   2m
+    }
+    tls off
+    root /usr/local/nginx/html
+    fastcgi / 127.0.0.1:9000 {
+        ext   .php
+        split .php
+        index index.php
+        connect_timeout 10s
+        read_timeout 10s
+        send_timeout 10s
+    }
+    errors /usr/local/nginx/logs/caddy-mainhost8081-errors.log {
+        rotate_size 100 # Rotate after 100 MB
+        rotate_age  14  # Keep log files for 14 days
+        rotate_keep 10  # Keep at most 10 log files
+        rotate_compress
+      }
+    log / /usr/local/nginx/logs/caddy-mainhost8081-access.nossl.log "{remote} {when} {method} {uri} {proto} {status} {size} {>User-Agent} {latency}" {
+        rotate_size 100 # Rotate after 100 MB
+        rotate_age  14  # Keep log files for 14 days
+        rotate_keep 10  # Keep at most 10 log files
+        rotate_compress
+    }
+}
+EOF
+```
+
+```
+caddy_hostname=$(hostname -f)
+cat >/etc/caddy/Caddyfile8081<<EOF
+$caddy_hostname:8082 {
+    gzip {
+        level 6
+        min_length 1400
+    }
+    browse
+    header / {
+        #Strict-Transport-Security "max-age=31536000"
+        #Cache-Control "max-age=86400"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        X-XSS-Protection "1; mode=block"
+        X-Powered-By "Caddy via CentminMod"
+        #-Server
+    }
+    timeouts {
+    read   10s
+    header 10s
+    write  20s
+    idle   2m
+    }
+    tls off
+    root /usr/local/nginx/html
+    fastcgi / 127.0.0.1:9000 {
+        ext   .php
+        split .php
+        index index.php
+        connect_timeout 10s
+        read_timeout 10s
+        send_timeout 10s
+    }
+    errors /usr/local/nginx/logs/caddy-mainhost8082-errors.log {
+        rotate_size 100 # Rotate after 100 MB
+        rotate_age  14  # Keep log files for 14 days
+        rotate_keep 10  # Keep at most 10 log files
+        rotate_compress
+      }
+    log / /usr/local/nginx/logs/caddy-mainhost8082-access.nossl.log "{remote} {when} {method} {uri} {proto} {status} {size} {>User-Agent} {latency}" {
+        rotate_size 100 # Rotate after 100 MB
+        rotate_age  14  # Keep log files for 14 days
+        rotate_keep 10  # Keep at most 10 log files
+        rotate_compress
+    }
+}
+EOF
 ```
