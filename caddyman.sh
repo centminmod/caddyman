@@ -210,6 +210,7 @@ rebuild_caddy(){
 
     ##############################################################
     \cp -f caddy "$CADDY_BIN"
+    strip "$CADDY_BIN"
 
     if [ ! $? == 0 ]; then
 
@@ -256,6 +257,7 @@ rebuild_caddy(){
             echo "Rebuilding caddy binary GCC optimized [SUCCESS]"
         
             \cp -f caddy "${CADDY_BIN}${SUFFIX}"
+            strip "${CADDY_BIN}${SUFFIX}"
         
             if [ ! $? == 0 ]; then
         
@@ -303,6 +305,7 @@ rebuild_caddy(){
             echo "Rebuilding caddy binary Clang optimized [SUCCESS]"
         
             \cp -f caddy "${CADDY_BIN}${SUFFIX}"
+            strip "${CADDY_BIN}${SUFFIX}"
         
             if [ ! $? == 0 ]; then
         
