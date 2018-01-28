@@ -94,9 +94,9 @@ usage: cadyman list                           (list available plugins)
 ./caddyman.sh install_by_url github.com/itsyouonline/caddy-integration/oauth oauth```
     - Another example for a plugin that doesn't require a directive ```./caddyman.sh install_by_url github.com/abiosoft/caddy-git```
 
-- Install multiple plugins by name
+- Install multiple plugins by name including building 3 separate caddy binaries for default GCC 4.8.5 compile, GCC 7.2.1 and Clang 4.0.1
 ```
-./caddyman.sh install authz awses awslambda cache cgi cors datadog expires filter git gopkg grpc hugo ipfilter jekyll jsonp jwt locale login mailout minify multipass nobots prometheus proxyprotocol ratelimit realip reauth restic search upload webdav            
+./caddyman.sh install authz awses awslambda cache cgi cors datadog expires filter git gopkg hugo ipfilter jekyll jsonp jwt locale login mailout minify multipass nobots prometheus proxyprotocol ratelimit realip reauth restic search upload webdav
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
 Getting plugin [SUCCESS]m/casbin/caddy-authz 
@@ -140,10 +140,6 @@ Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
 Getting plugin [SUCCESS]m/zikes/gopkg 
-Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
-Using GPATH : /root/golang/packages
-Ensuring Caddy is up-to-date [SUCCESS]
-Getting plugin [SUCCESS]m/pieterlouw/caddy-grpc 
 Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
@@ -230,12 +226,26 @@ Ensure caddy build system dependencies [SUCCESS]
 Rebuilding caddy binary [SUCCESS]
 Copying caddy binary to /root/golang/packages/bin [SUCCESS]
 Copying caddy binary to /usr/local/bin/caddy [SUCCESS]
+Rebuilding caddy binary GCC optimized [SUCCESS]
+Copying caddy GCC optimized binary to /usr/local/bin/caddy-gcc7 [SUCCESS]
+Rebuilding caddy binary Clang optimized [SUCCESS]
+Copying caddy Clang optimized binary to /usr/local/bin/caddy-clang4 [SUCCESS]
 ```
 
 ```
 /usr/local/bin/caddy -version
-Caddy 0.10.9 (+545fa84 Fri Sep 15 14:17:20 UTC 2017)
-1 file changed, 32 insertions(+)
+Caddy 0.10.10 (+106d62b Sun Jan 28 06:02:39 UTC 2018) (unofficial)
+1 file changed, 31 insertions(+)
+caddy/caddymain/run.go
+
+/usr/local/bin/caddy-gcc7 -version
+Caddy 0.10.10 (+106d62b Sun Jan 28 06:03:00 UTC 2018) (unofficial)
+1 file changed, 31 insertions(+)
+caddy/caddymain/run.go
+
+/usr/local/bin/caddy-clang4 -version
+Caddy 0.10.10 (+106d62b Sun Jan 28 06:03:21 UTC 2018) (unofficial)
+1 file changed, 31 insertions(+)
 caddy/caddymain/run.go
 ```
 
@@ -268,7 +278,6 @@ Other plugins:
   http.filter
   http.git
   http.gopkg
-  http.grpc
   http.gzip
   http.header
   http.hugo
@@ -308,6 +317,7 @@ Other plugins:
   http.upload
   http.webdav
   http.websocket
+  on
   shutdown
   startup
   tls
