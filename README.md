@@ -321,23 +321,25 @@ Copying caddy Clang optimized binary to /usr/local/bin/caddy-clang4 [SUCCESS]
 
 ```
 /usr/local/bin/caddy -version
-Caddy 0.10.10 (+106d62b Mon Feb 19 15:03:38 UTC 2018) (unofficial)
-2 files changed, 51 insertions(+)
+Caddy 0.10.11 (+d3f338d Tue Feb 20 20:49:54 UTC 2018) (unofficial)
+2 files changed, 50 insertions(+)
 caddy/caddymain/run.go
 caddyhttp/httpserver/plugin.go
 
 /usr/local/bin/caddy-gcc7 -version
-Caddy 0.10.10 (+106d62b Mon Feb 19 15:04:27 UTC 2018) (unofficial)
-2 files changed, 51 insertions(+)
+Caddy 0.10.11 (+d3f338d Tue Feb 20 20:50:25 UTC 2018) (unofficial)
+2 files changed, 50 insertions(+)
 caddy/caddymain/run.go
 caddyhttp/httpserver/plugin.go
 
 /usr/local/bin/caddy-clang4 -version
-Caddy 0.10.10 (+106d62b Mon Feb 19 15:05:03 UTC 2018) (unofficial)
-2 files changed, 51 insertions(+)
+Caddy 0.10.11 (+d3f338d Tue Feb 20 20:50:52 UTC 2018) (unofficial)
+2 files changed, 50 insertions(+)
 caddy/caddymain/run.go
 caddyhttp/httpserver/plugin.go
 ```
+
+0.10.11 output
 
 ```
 /usr/local/bin/caddy -plugins

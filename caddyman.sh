@@ -85,6 +85,14 @@ check_go_path(){
 }
 
 # Update Caddy source
+update_caddymaster() {
+    if [ -d "$GOPATH/src/github.com/mholt/caddy" ]; then
+        pushd "$GOPATH/src/github.com/mholt/caddy" >/dev/null 2>&1
+        git stash -q
+        popd >/dev/null 2>&1
+    fi
+}
+
 update_caddy(){
     CADDY_GO_PACKAGE=github.com/mholt/caddy
     echo -ne "Ensuring Caddy is up-to-date \r"
@@ -357,8 +365,12 @@ install(){
 ## START ##
 
 # check proper params
-if [[ $# -lt 1 || (  $1 != "list"  &&  $1 != "install" && $1 != "install_url" ) ]]; then
+if [[ $# -lt 1 || (  $1 != "list"  &&  $1 != "install" && $1 != "install_url" && $1 != "updatesrc" ) ]]; then
     show_usage
+fi
+
+if [ $1 == "updatesrc" ]; then
+    update_caddymaster
 fi
 
 # list takes no extra params
