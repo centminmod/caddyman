@@ -29,17 +29,17 @@ declare -A plugins_urls=(
     ["dnsmadeeasy"]="github.com/caddyserver/dnsproviders/dnsmadeeasy"
     ["dyn"]="github.com/caddyserver/dnsproviders/dyn"
     ["expires"]="github.com/epicagency/caddy-expires"
-    ["filemanager"]="github.com/hacdias/filemanager/caddy/filemanager"
+    ["filemanager"]="github.com/filebrowser/filebrowser/caddy/filemanager"
     ["filter"]="github.com/echocat/caddy-filter"
     ["forwardproxy"]="github.com/caddyserver/forwardproxy"
     ["git"]="github.com/abiosoft/caddy-git"
     ["godaddy"]="github.com/caddyserver/dnsproviders/godaddy"
     ["googlecloud"]="github.com/caddyserver/dnsproviders/googlecloud"
     ["gopkg"]="github.com/zikes/gopkg"
-    ["hugo"]="github.com/hacdias/filemanager/caddy/hugo"
+    ["hugo"]="github.com/filebrowser/filebrowser/caddy/hugo"
     ["ipfilter"]="github.com/pyed/ipfilter"
     ["iyo"]="github.com/itsyouonline/caddy-integration/oauth"
-    ["jekyll"]="github.com/hacdias/filemanager/caddy/jekyll"
+    ["jekyll"]="github.com/filebrowser/filebrowser/caddy/jekyll"
     ["jsonp"]="github.com/pschlump/caddy-jsonp"
     ["jwt"]="github.com/BTBurke/caddy-jwt"
     ["linode"]="github.com/caddyserver/dnsproviders/linode"
@@ -347,6 +347,8 @@ rebuild_caddy(){
 }
 
 install(){
+    export CC="gcc"
+    export CXX="g++"
     check_go_path
     update_caddy
 
@@ -354,7 +356,7 @@ install(){
     directive=$2
 
     # special case :: if installing hugo plugin, make sure to install hugo 1st
-    if [ $url == "github.com/hacdias/filemanager/caddy/hugo" ]; then
+    if [ $url == "github.com/filebrowser/filebrowser/caddy/hugo" ]; then
         install_hugo
     fi
 
