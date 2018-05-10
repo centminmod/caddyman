@@ -12,6 +12,7 @@ DEVTOOLSETEIGHT='n'
 CLANG_FOUR='y'
 CLANG_FIVE='n'
 CLANG_SIX='n'
+DISABLE_TELEMETRY='y'
 ###############################################################
 
 # Dictionary with plugin name as key, URL as value
@@ -193,6 +194,11 @@ rebuild_caddy(){
                 echo "HTTP Sponsor Header Still Detected [FAILED]"
             fi
         fi
+    fi
+
+    if [[ "$DISABLE_TELEMETRY" = [yY] ]]; then
+        echo -ne "Disable Telemetry\r"
+        sed -i 's|enableTelemetry = true|enableTelemetry = false|' $CADDY_PATH/caddy/caddymain/run.go
     fi
 
     if [[ "$(uname -m)" = 'x86_64' ]]; then
