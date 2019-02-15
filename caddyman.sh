@@ -127,6 +127,9 @@ listcheck(){
 # Print usage message
 show_usage(){
     echo "usage: cadyman list                                   (list available plugins)"
+    echo "               listname                               (list plugins name only)"
+    echo "               listcheck                              (curl header check for plugins)"
+    echo "               updatesrc                              (update caddy source)"
     echo "               install plugin_name1 plugin_name2 ...  (install plugins by their names)"
     echo "               install_url url {directive}            (install plugin by url)"
     exit 1
