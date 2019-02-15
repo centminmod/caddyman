@@ -9,11 +9,18 @@ DEVTOOLSETFOUR='n'
 DEVTOOLSETSIX='n'
 DEVTOOLSETSEVEN='y'
 DEVTOOLSETEIGHT='n'
-CLANG_FOUR='y'
-CLANG_FIVE='n'
+CLANG_FOUR='n'
+CLANG_FIVE='y'
 CLANG_SIX='n'
 DISABLE_TELEMETRY='y'
 ###############################################################
+mkdir -p /home/caddytemp
+chmod 1777 /home/caddytemp
+export TMPDIR=/home/caddytemp
+
+if [ ! -d "$GOPATH/src/github.com/mholt/caddy" ]; then
+  go get github.com/mholt/caddy/caddy >/dev/null 2>&1
+fi
 
 # Dictionary with plugin name as key, URL as value
 declare -A plugins_urls=(
@@ -39,9 +46,9 @@ declare -A plugins_urls=(
     ["gopkg"]="github.com/zikes/gopkg"
     ["hugo"]="github.com/filebrowser/filebrowser/caddy/hugo"
     ["ipfilter"]="github.com/pyed/ipfilter"
-    ["iyo"]="github.com/itsyouonline/caddy-integration/oauth"
+    # ["iyo"]="github.com/itsyouonline/caddy-integration/oauth"
     ["jekyll"]="github.com/filebrowser/filebrowser/caddy/jekyll"
-    ["jsonp"]="github.com/pschlump/caddy-jsonp"
+    # ["jsonp"]="github.com/pschlump/caddy-jsonp"
     ["jwt"]="github.com/BTBurke/caddy-jwt"
     ["linode"]="github.com/caddyserver/dnsproviders/linode"
     ["locale"]="github.com/simia-tech/caddy-locale"
@@ -107,6 +114,15 @@ list(){
     for plugin in "${!plugins_urls[@]}"; do echo "[$plugin] ${plugins_urls[$plugin]}"; done
 }
 
+listname(){
+    for plugin in "${!plugins_urls[@]}"; do echo "$plugin"; done
+}
+
+# check validaity of download urls
+listcheck(){
+    for plugin in "${!plugins_urls[@]}"; do echo -n "${plugins_urls[$plugin]} "; curl -sI https://${plugins_urls[$plugin]} 2>&1 | head -n1; done
+}
+
 
 # Print usage message
 show_usage(){
@@ -120,7 +136,7 @@ show_usage(){
 # Install plugin given its name or display error message if name not in our supported plugins
 install_plugin_by_name(){
     if [ -z ${plugins_urls[$1]} ]; then
-        echo "Plugin name is not recognized"
+        echo "Plugin name ${plugin_name} is not recognized"
     else
          if [ -z ${plugins_directives[$1]} ]; then
             install ${plugins_urls[$1]} ""
@@ -266,6 +282,10 @@ rebuild_caddy(){
             source /opt/rh/devtoolset-7/enable
             CUSTOM_GCCCOMPILEDYES='y'
             SUFFIX='-gcc7'
+        elif [[ "$DEVTOOLSETEIGHT" = [yY] &&  -f /opt/rh/devtoolset-8/root/usr/bin/gcc && -f /opt/rh/devtoolset-8/root/usr/bin/g++ ]]; then
+            source /opt/rh/devtoolset-8/enable
+            CUSTOM_GCCCOMPILEDYES='y'
+            SUFFIX='-gcc8'
         elif [[ "$DEVTOOLSETEIGHT" = [yY] && -f /opt/gcc8/bin/gcc && -f /opt/gcc8/bin/g++ ]]; then
             source /opt/gcc8/enable
             CUSTOM_GCCCOMPILEDYES='y'
@@ -311,6 +331,10 @@ rebuild_caddy(){
             CLANG_BIN='/opt/rh/llvm-toolset-7/root/usr/bin/clang'
             CUSTOM_CLANGCOMPILEDYES='y'
             SUFFIX='-clang4'
+        elif [[ "$CLANG_FIVE" = [yY] && -f /opt/rh/llvm-toolset-7/root/usr/bin/clang && -f /opt/rh/llvm-toolset-7/root/usr/bin/clang++ ]]; then
+            CLANG_BIN='/opt/rh/llvm-toolset-7/root/usr/bin/clang'
+            CUSTOM_CLANGCOMPILEDYES='y'
+            SUFFIX='-clang5'
         elif [[ "$CLANG_FIVE" = [yY] && -f /opt/sbin/llvm-release_50/bin/clang && -f /opt/sbin/llvm-release_50/bin/clang++ ]]; then
             CLANG_BIN='/opt/sbin/llvm-release_50/bin/clang'
             CUSTOM_CLANGCOMPILEDYES='y'
@@ -373,7 +397,7 @@ install(){
 ## START ##
 
 # check proper params
-if [[ $# -lt 1 || (  $1 != "list"  &&  $1 != "install" && $1 != "install_url" && $1 != "updatesrc" ) ]]; then
+if [[ $# -lt 1 || (  $1 != "listname" && $1 != "listcheck" && $1 != "list" &&  $1 != "install" && $1 != "install_url" && $1 != "updatesrc" ) ]]; then
     show_usage
 fi
 
@@ -387,6 +411,24 @@ if [ $1 == "list" ]; then
         show_usage
     else
         list
+    fi
+fi
+
+# listname takes no extra params
+if [ $1 == "listname" ]; then
+    if [ $# != 1 ]; then
+        show_usage
+    else
+        listname
+    fi
+fi
+
+# listcheck takes no extra params
+if [ $1 == "listcheck" ]; then
+    if [ $# != 1 ]; then
+        show_usage
+    else
+        listcheck
     fi
 fi
 
