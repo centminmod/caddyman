@@ -96,7 +96,7 @@ tail -100 /usr/local/nginx/logs/caddy-mainhost-access.nossl.log
 ```
 alias caddysys='nano /etc/systemd/system/caddy.service'
 alias caddyconf='nano /etc/caddy/Caddyfile'
-alias caddyrestart='systemctl daemon-reload; systemctl start caddy.service; systemctl status caddy.service;'
+alias caddyrestart='systemctl daemon-reload; systemctl restart caddy.service; systemctl status caddy.service;'
 ```
 
 ```

@@ -127,7 +127,8 @@ Copying caddy Clang optimized binary to /usr/local/bin/caddy-clang5 [SUCCESS]
 Selected plugins minus dns providers with exception of cloudflare
 
 ```
-./caddyman.sh install upload proxyprotocol expires git forwardproxy minify search gopkg authz nobots filebrowser multipass locale cache realip ipfilter mailout cors restic filter awslambda prometheus awses reauth cloudflare cgi ratelimit login jwt
+./caddyman.sh install upload proxyprotocol expires git forwardproxy minify search gopkg authz nobots multipass locale cache realip ipfilter mailout cors restic filter awslambda prometheus awses reauth cloudflare cgi ratelimit login jwt
+
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
 Getting plugin [SUCCESS].com/src/caddy.upload 
@@ -167,10 +168,6 @@ Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
 Getting plugin [SUCCESS]m/Xumeiquer/nobots 
-Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
-Using GPATH : /root/golang/packages
-Ensuring Caddy is up-to-date [SUCCESS]
-Getting plugin [SUCCESS]m/filebrowser/caddy 
 Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
@@ -246,15 +243,16 @@ Getting plugin [SUCCESS]m/BTBurke/caddy-jwt
 Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Ensure caddy build system dependencies [SUCCESS]
 Rebuilding caddy binary [SUCCESS]
+Caddy is Running .. Stopping process [SUCCESS]
 Copying caddy binary to /root/golang/packages/bin [SUCCESS]
 Copying caddy binary to /usr/local/bin/caddy [SUCCESS]
 Rebuilding caddy binary GCC optimized [SUCCESS]
 Copying caddy GCC optimized binary to /usr/local/bin/caddy-gcc7 [SUCCESS]
 Rebuilding caddy binary Clang optimized [SUCCESS]
 Copying caddy Clang optimized binary to /usr/local/bin/caddy-clang5 [SUCCESS]
--rwxr-xr-x 1 root root 58M Feb 15 08:44 /usr/local/bin/caddy
--rwxr-xr-x 1 root root 58M Feb 15 08:45 /usr/local/bin/caddy-clang5
--rwxr-xr-x 1 root root 58M Feb 15 08:45 /usr/local/bin/caddy-gcc7
+-rwxr-xr-x 1 root root 58M Feb 15 10:41 /usr/local/bin/caddy
+-rwxr-xr-x 1 root root 58M Feb 15 10:41 /usr/local/bin/caddy-clang5
+-rwxr-xr-x 1 root root 58M Feb 15 10:41 /usr/local/bin/caddy-gcc7
 ```
 
 All plugins
@@ -499,7 +497,6 @@ Other plugins:
   http.expvar
   http.ext
   http.fastcgi
-  http.filebrowser
   http.filter
   http.forwardproxy
   http.git
