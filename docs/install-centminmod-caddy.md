@@ -81,7 +81,7 @@ chmod 0666 /usr/local/nginx/logs/caddy-mainhost-access.nossl.log
 
 setcap 'cap_net_bind_service=+ep' /usr/local/bin/caddy
 setcap 'cap_net_bind_service=+ep' /usr/local/bin/caddy-gcc7
-setcap 'cap_net_bind_service=+ep' /usr/local/bin/caddy-clang4
+setcap 'cap_net_bind_service=+ep' /usr/local/bin/caddy-clang5
 systemctl daemon-reload
 systemctl start caddy.service
 systemctl status caddy.service
@@ -120,7 +120,7 @@ Environment=CADDYPATH=/etc/ssl/caddy
 ; Always set "-root" to something safe in case it gets forgotten in the Caddyfile.
 ExecStart=/usr/local/bin/caddy -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
 ; ExecStart=/usr/local/bin/caddy-gcc7 -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
-; ExecStart=/usr/local/bin/caddy-clang4 -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
+; ExecStart=/usr/local/bin/caddy-clang5 -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
 ExecReload=/bin/kill -USR1 $MAINPID
 
 ; Use graceful shutdown with a reasonable timeout
