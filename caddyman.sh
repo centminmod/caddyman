@@ -373,6 +373,8 @@ rebuild_caddy(){
             else
                 echo -n "Copying caddy Clang optimized binary to "${CADDY_BIN}${SUFFIX}" [SUCCESS]"
                 echo ""
+                ls -lah /usr/local/bin/caddy*
+                echo ""
             fi
         fi
     fi
