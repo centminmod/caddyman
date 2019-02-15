@@ -214,7 +214,7 @@ rebuild_caddy(){
 
     if [[ "$DISABLE_TELEMETRY" = [yY] ]]; then
         echo -ne "Disable Telemetry\r"
-        sed -i 's|enableTelemetry = true|enableTelemetry = false|' $CADDY_PATH/caddy/caddymain/run.go
+        sed -i 's|EnableTelemetry = true|EnableTelemetry = false|' $CADDY_PATH/caddy/caddymain/run.go
     fi
 
     if [[ "$(uname -m)" = 'x86_64' ]]; then
