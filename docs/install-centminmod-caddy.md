@@ -162,15 +162,15 @@ WantedBy=multi-user.target
 Additional Caddy instances for caddy-gcc7 and caddy-clang4 built binaries
 
 ```
-cp -a /etc/systemd/system/caddy.service /etc/systemd/system/caddy8080.service
 cp -a /etc/systemd/system/caddy.service /etc/systemd/system/caddy8081.service
-sed -i 's|||' /etc/systemd/system/caddy8080.service
+cp -a /etc/systemd/system/caddy.service /etc/systemd/system/caddy8082.service
 sed -i 's|||' /etc/systemd/system/caddy8081.service
+sed -i 's|||' /etc/systemd/system/caddy8082.service
 ```
 
 ```
 caddy_hostname=$(hostname -f)
-cat >/etc/caddy/Caddyfile8080<<EOF
+cat >/etc/caddy/Caddyfile8081<<EOF
 $caddy_hostname:8081 {
     gzip {
         level 6
@@ -220,7 +220,7 @@ EOF
 
 ```
 caddy_hostname=$(hostname -f)
-cat >/etc/caddy/Caddyfile8081<<EOF
+cat >/etc/caddy/Caddyfile8082<<EOF
 $caddy_hostname:8082 {
     gzip {
         level 6
