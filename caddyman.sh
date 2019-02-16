@@ -239,7 +239,7 @@ rebuild_caddy(){
     export CGO_CXXFLAGS="-g -O2"
     export CGO_FFLAGS="-g -O2"
     export CGO_LDFLAGS="-g -O2"
-    go run build.go
+    go run build.go -goos=linux -goarch=amd64
     echo "Rebuilding caddy binary [SUCCESS]"
 
     if pgrep -x "caddy" > /dev/null
@@ -311,7 +311,7 @@ rebuild_caddy(){
             export CGO_FFLAGS="-g -O3"
             export CGO_LDFLAGS="-g -O3"
         
-            go run build.go
+            go run build.go -goos=linux -goarch=amd64
             echo "Rebuilding caddy binary GCC optimized [SUCCESS]"
         
             \cp -f caddy "${CADDY_BIN}${SUFFIX}"
@@ -364,7 +364,7 @@ rebuild_caddy(){
             export CGO_FFLAGS="-g -O3"
             export CGO_LDFLAGS="-g -O3"
         
-            go run build.go
+            go run build.go -goos=linux -goarch=amd64
             echo "Rebuilding caddy binary Clang optimized [SUCCESS]"
         
             \cp -f caddy "${CADDY_BIN}${SUFFIX}"
