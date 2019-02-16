@@ -104,7 +104,9 @@ update_caddymaster() {
 update_caddy(){
     CADDY_GO_PACKAGE=github.com/mholt/caddy
     echo -ne "Ensuring Caddy is up-to-date \r"
+    export CC=gcc
     go get $CADDY_GO_PACKAGE
+    go get -u $CADDY_GO_PACKAGE
     echo "Ensuring Caddy is up-to-date [SUCCESS]"
 }
 
