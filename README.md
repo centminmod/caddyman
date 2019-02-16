@@ -401,7 +401,7 @@ All plugins
 
 ```
 ./caddyman.sh updatesrc
-./caddyman.sh install pdns digitalocean upload proxyprotocol expires git forwardproxy minify gopkg grpc dnsmadeeasy authz datadog nobots route53 locale cache realip ipfilter dyn namecheap webdav mailout cors restic filter awslambda prometheus ns1 awses linode vultr reauth cloudflare cgi googlecloud godaddy ovh ratelimit rackspace azure login jwt
+./caddyman.sh install pdns digitalocean upload proxyprotocol expires git forwardproxy minify gopkg grpc dnsmadeeasy authz datadog nobots route53 locale cache realip ipfilter dyn namecheap webdav mailout cors restic filter awslambda prometheus ns1 awses linode vultr reauth cloudflare cgi googlecloud godaddy ovh ratelimit rackspace azure login jwt geoip s3browser
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
 Getting plugin [SUCCESS]m/caddyserver/dnsproviders/pdns 
@@ -574,6 +574,14 @@ Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
 Getting plugin [SUCCESS]m/BTBurke/caddy-jwt 
 Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Using GPATH : /root/golang/packages
+Ensuring Caddy is up-to-date [SUCCESS]
+Getting plugin [SUCCESS]m/hiphref/caddy-geoip 
+Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Using GPATH : /root/golang/packages
+Ensuring Caddy is up-to-date [SUCCESS]
+Getting plugin [SUCCESS]m/techknowlogick/caddy-s3browser 
+Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Ensure caddy build system dependencies [SUCCESS]
 Disable Telemetry [SUCCESS]
 Rebuilding caddy binary [SUCCESS]
@@ -584,25 +592,25 @@ Rebuilding caddy binary GCC optimized [SUCCESS]
 Copying caddy GCC optimized binary to /usr/local/bin/caddy-gcc7 [SUCCESS]
 Rebuilding caddy binary Clang optimized [SUCCESS]
 Copying caddy Clang optimized binary to /usr/local/bin/caddy-clang5 [SUCCESS]
--rwxr-xr-x 1 root root 35M Feb 16 06:49 /usr/local/bin/caddy
--rwxr-xr-x 1 root root 35M Feb 16 06:49 /usr/local/bin/caddy-clang5
--rwxr-xr-x 1 root root 35M Feb 16 06:49 /usr/local/bin/caddy-gcc7
+-rwxr-xr-x 1 root root 36M Feb 16 15:44 /usr/local/bin/caddy
+-rwxr-xr-x 1 root root 36M Feb 16 15:45 /usr/local/bin/caddy-clang5
+-rwxr-xr-x 1 root root 36M Feb 16 15:45 /usr/local/bin/caddy-gcc7
 ```
 
 ```
 /usr/local/bin/caddy -version
-Caddy 0.11.4 (+c1d6c92 Sat Feb 16 06:49:05 UTC 2019) (unofficial)
-1 file changed, 44 insertions(+), 1 deletion(-)
+Caddy 0.11.4 (+33b00dc Sat Feb 16 15:44:48 UTC 2019) (unofficial)
+1 file changed, 46 insertions(+), 1 deletion(-)
 caddy/caddymain/run.go
 
 /usr/local/bin/caddy-gcc7 -version
-Caddy 0.11.4 (+c1d6c92 Sat Feb 16 06:49:13 UTC 2019) (unofficial)
-1 file changed, 44 insertions(+), 1 deletion(-)
+Caddy 0.11.4 (+33b00dc Sat Feb 16 15:44:55 UTC 2019) (unofficial)
+1 file changed, 46 insertions(+), 1 deletion(-)
 caddy/caddymain/run.go
 
 /usr/local/bin/caddy-clang5 -version
-Caddy 0.11.4 (+c1d6c92 Sat Feb 16 06:49:20 UTC 2019) (unofficial)
-1 file changed, 44 insertions(+), 1 deletion(-)
+Caddy 0.11.4 (+33b00dc Sat Feb 16 15:45:03 UTC 2019) (unofficial)
+1 file changed, 46 insertions(+), 1 deletion(-)
 caddy/caddymain/run.go
 ```
 
@@ -636,6 +644,7 @@ Other plugins:
   http.fastcgi
   http.filter
   http.forwardproxy
+  http.geoip
   http.git
   http.gopkg
   http.grpc
@@ -667,6 +676,7 @@ Other plugins:
   http.restic
   http.rewrite
   http.root
+  http.s3browser
   http.secrets
   http.status
   http.templates
