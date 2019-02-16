@@ -127,6 +127,160 @@ Copying caddy Clang optimized binary to /usr/local/bin/caddy-clang5 [SUCCESS]
 
 - Install multiple plugins by name including building 3 separate caddy binaries for default GCC 4.8.5 compile, GCC 7.2.1 and Clang 4.0.1
 
+Minimal selected plugins minus dns providers with exception of cloudflare
+
+```
+./caddyman.sh updatesrc
+./caddyman.sh install proxyprotocol expires git forwardproxy minify authz locale cache realip ipfilter cors filter cloudflare cgi ratelimit login jwt
+Using GPATH : /root/golang/packages
+Ensuring Caddy is up-to-date [SUCCESS]
+Getting plugin [SUCCESS]m/mastercactapus/caddy-proxyprotocol 
+Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Using GPATH : /root/golang/packages
+Ensuring Caddy is up-to-date [SUCCESS]
+Getting plugin [SUCCESS]m/epicagency/caddy-expires 
+Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Using GPATH : /root/golang/packages
+Ensuring Caddy is up-to-date [SUCCESS]
+Getting plugin [SUCCESS]m/abiosoft/caddy-git 
+Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Using GPATH : /root/golang/packages
+Ensuring Caddy is up-to-date [SUCCESS]
+Getting plugin [SUCCESS]m/caddyserver/forwardproxy 
+Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Using GPATH : /root/golang/packages
+Ensuring Caddy is up-to-date [SUCCESS]
+Getting plugin [SUCCESS]m/hacdias/caddy-minify 
+Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Using GPATH : /root/golang/packages
+Ensuring Caddy is up-to-date [SUCCESS]
+Getting plugin [SUCCESS]m/casbin/caddy-authz 
+Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Using GPATH : /root/golang/packages
+Ensuring Caddy is up-to-date [SUCCESS]
+Getting plugin [SUCCESS]m/simia-tech/caddy-locale 
+Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Using GPATH : /root/golang/packages
+Ensuring Caddy is up-to-date [SUCCESS]
+Getting plugin [SUCCESS]m/nicolasazrak/caddy-cache 
+Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Using GPATH : /root/golang/packages
+Ensuring Caddy is up-to-date [SUCCESS]
+Getting plugin [SUCCESS]m/captncraig/caddy-realip 
+Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Using GPATH : /root/golang/packages
+Ensuring Caddy is up-to-date [SUCCESS]
+Getting plugin [SUCCESS]m/pyed/ipfilter 
+Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Using GPATH : /root/golang/packages
+Ensuring Caddy is up-to-date [SUCCESS]
+Getting plugin [SUCCESS]m/captncraig/cors/caddy 
+Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Using GPATH : /root/golang/packages
+Ensuring Caddy is up-to-date [SUCCESS]
+Getting plugin [SUCCESS]m/echocat/caddy-filter 
+Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Using GPATH : /root/golang/packages
+Ensuring Caddy is up-to-date [SUCCESS]
+Getting plugin [SUCCESS]m/caddyserver/dnsproviders/cloudflare 
+Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Using GPATH : /root/golang/packages
+Ensuring Caddy is up-to-date [SUCCESS]
+Getting plugin [SUCCESS]m/jung-kurt/caddy-cgi 
+Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Using GPATH : /root/golang/packages
+Ensuring Caddy is up-to-date [SUCCESS]
+Getting plugin [SUCCESS]m/xuqingfeng/caddy-rate-limit 
+Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Using GPATH : /root/golang/packages
+Ensuring Caddy is up-to-date [SUCCESS]
+Getting plugin [SUCCESS]m/tarent/loginsrv/caddy 
+Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Using GPATH : /root/golang/packages
+Ensuring Caddy is up-to-date [SUCCESS]
+Getting plugin [SUCCESS]m/BTBurke/caddy-jwt 
+Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Ensure caddy build system dependencies [SUCCESS]
+Disable Telemetry [SUCCESS]
+Rebuilding caddy binary [SUCCESS]
+Caddy is Running .. Stopping process [SUCCESS]
+Copying caddy binary to /root/golang/packages/bin [SUCCESS]
+Copying caddy binary to /usr/local/bin/caddy [SUCCESS]
+Rebuilding caddy binary GCC optimized [SUCCESS]
+Copying caddy GCC optimized binary to /usr/local/bin/caddy-gcc7 [SUCCESS]
+Rebuilding caddy binary Clang optimized [SUCCESS]
+Copying caddy Clang optimized binary to /usr/local/bin/caddy-clang5 [SUCCESS]
+-rwxr-xr-x 1 root root 19M Feb 16 07:18 /usr/local/bin/caddy
+-rwxr-xr-x 1 root root 19M Feb 16 07:18 /usr/local/bin/caddy-clang5
+-rwxr-xr-x 1 root root 19M Feb 16 07:18 /usr/local/bin/caddy-gcc7
+```
+
+```
+caddy --version
+Caddy 0.11.4 (+c1d6c92 Sat Feb 16 07:18:10 UTC 2019) (unofficial)
+1 file changed, 18 insertions(+), 1 deletion(-)
+caddy/caddymain/run.go
+```
+
+```
+caddy --plugins
+Server types:
+  http
+
+Caddyfile loaders:
+  short
+  flag
+  default
+
+Other plugins:
+  http.authz
+  http.basicauth
+  http.bind
+  http.browse
+  http.cache
+  http.cgi
+  http.cors
+  http.errors
+  http.expires
+  http.expvar
+  http.ext
+  http.fastcgi
+  http.filter
+  http.forwardproxy
+  http.git
+  http.gzip
+  http.header
+  http.index
+  http.internal
+  http.ipfilter
+  http.jwt
+  http.limits
+  http.locale
+  http.log
+  http.login
+  http.markdown
+  http.mime
+  http.minify
+  http.pprof
+  http.proxy
+  http.proxyprotocol
+  http.push
+  http.ratelimit
+  http.realip
+  http.redir
+  http.request_id
+  http.rewrite
+  http.root
+  http.status
+  http.templates
+  http.timeouts
+  http.websocket
+  on
+  tls
+  tls.cluster.file
+  tls.dns.cloudflare
+```
+
 Selected plugins minus dns providers with exception of cloudflare
 
 ```
