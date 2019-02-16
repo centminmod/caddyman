@@ -47,9 +47,9 @@ usage: cadyman list                                   (list available plugins)
 [dnsmadeeasy] github.com/caddyserver/dnsproviders/dnsmadeeasy
 [dyn] github.com/caddyserver/dnsproviders/dyn
 [expires] github.com/epicagency/caddy-expires
-[filebrowser] github.com/filebrowser/caddy
 [filter] github.com/echocat/caddy-filter
 [forwardproxy] github.com/caddyserver/forwardproxy
+[geoip] github.com/hiphref/caddy-geoip
 [git] github.com/abiosoft/caddy-git
 [godaddy] github.com/caddyserver/dnsproviders/godaddy
 [googlecloud] github.com/caddyserver/dnsproviders/googlecloud
@@ -63,6 +63,7 @@ usage: cadyman list                                   (list available plugins)
 [minify] github.com/hacdias/caddy-minify
 [multipass] github.com/namsral/multipass/caddy
 [namecheap] github.com/caddyserver/dnsproviders/namecheap
+[net] github.com/pieterlouw/caddy-net
 [nobots] github.com/Xumeiquer/nobots
 [ns1] github.com/caddyserver/dnsproviders/ns1
 [ovh] github.com/caddyserver/dnsproviders/ovh
@@ -75,7 +76,9 @@ usage: cadyman list                                   (list available plugins)
 [reauth] github.com/freman/caddy-reauth
 [restic] github.com/restic/caddy
 [route53] github.com/caddyserver/dnsproviders/route53
+[s3browser] github.com/techknowlogick/caddy-s3browser
 [search] github.com/pedronasser/caddy-search
+[supervisor] github.com/lucaslorentz/caddy-supervisor
 [upload] blitznote.com/src/caddy.upload
 [vultr] github.com/caddyserver/dnsproviders/vultr
 [webdav] github.com/hacdias/caddy-webdav
@@ -127,8 +130,8 @@ Copying caddy Clang optimized binary to /usr/local/bin/caddy-clang5 [SUCCESS]
 Selected plugins minus dns providers with exception of cloudflare
 
 ```
-./caddyman.sh install upload proxyprotocol expires git forwardproxy minify search gopkg authz nobots multipass locale cache realip ipfilter mailout cors restic filter awslambda prometheus awses reauth cloudflare cgi ratelimit login jwt
-
+./caddyman.sh updatesrc
+./caddyman.sh install upload proxyprotocol expires git forwardproxy minify gopkg grpc authz locale cache realip ipfilter mailout cors filter awslambda prometheus awses cloudflare cgi ratelimit login jwt
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
 Getting plugin [SUCCESS].com/src/caddy.upload 
@@ -155,23 +158,15 @@ Getting plugin [SUCCESS]m/hacdias/caddy-minify
 Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
-Getting plugin [SUCCESS]m/pedronasser/caddy-search 
-Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
-Using GPATH : /root/golang/packages
-Ensuring Caddy is up-to-date [SUCCESS]
 Getting plugin [SUCCESS]m/zikes/gopkg 
 Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
+Getting plugin [SUCCESS]m/pieterlouw/caddy-grpc 
+Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Using GPATH : /root/golang/packages
+Ensuring Caddy is up-to-date [SUCCESS]
 Getting plugin [SUCCESS]m/casbin/caddy-authz 
-Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
-Using GPATH : /root/golang/packages
-Ensuring Caddy is up-to-date [SUCCESS]
-Getting plugin [SUCCESS]m/Xumeiquer/nobots 
-Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
-Using GPATH : /root/golang/packages
-Ensuring Caddy is up-to-date [SUCCESS]
-Getting plugin [SUCCESS]m/namsral/multipass/caddy 
 Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
@@ -199,10 +194,6 @@ Getting plugin [SUCCESS]m/captncraig/cors/caddy
 Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
-Getting plugin [SUCCESS]m/restic/caddy 
-Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
-Using GPATH : /root/golang/packages
-Ensuring Caddy is up-to-date [SUCCESS]
 Getting plugin [SUCCESS]m/echocat/caddy-filter 
 Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Using GPATH : /root/golang/packages
@@ -216,10 +207,6 @@ Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
 Getting plugin [SUCCESS]m/miquella/caddy-awses 
-Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
-Using GPATH : /root/golang/packages
-Ensuring Caddy is up-to-date [SUCCESS]
-Getting plugin [SUCCESS]m/freman/caddy-reauth 
 Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
@@ -251,15 +238,16 @@ Rebuilding caddy binary GCC optimized [SUCCESS]
 Copying caddy GCC optimized binary to /usr/local/bin/caddy-gcc7 [SUCCESS]
 Rebuilding caddy binary Clang optimized [SUCCESS]
 Copying caddy Clang optimized binary to /usr/local/bin/caddy-clang5 [SUCCESS]
--rwxr-xr-x 1 root root 58M Feb 15 10:41 /usr/local/bin/caddy
--rwxr-xr-x 1 root root 58M Feb 15 10:41 /usr/local/bin/caddy-clang5
--rwxr-xr-x 1 root root 58M Feb 15 10:41 /usr/local/bin/caddy-gcc7
+-rwxr-xr-x 1 root root 26M Feb 16 06:42 /usr/local/bin/caddy
+-rwxr-xr-x 1 root root 26M Feb 16 06:42 /usr/local/bin/caddy-clang5
+-rwxr-xr-x 1 root root 26M Feb 16 06:42 /usr/local/bin/caddy-gcc7
 ```
 
 All plugins
 
 ```
-./caddyman.sh install pdns digitalocean upload proxyprotocol expires git forwardproxy minify search gopkg dnsmadeeasy authz datadog nobots filebrowser multipass route53 locale cache realip ipfilter dyn namecheap webdav mailout cors restic filter awslambda prometheus ns1 awses linode vultr reauth cloudflare cgi googlecloud godaddy ovh ratelimit rackspace azure login jwt
+./caddyman.sh updatesrc
+./caddyman.sh install pdns digitalocean upload proxyprotocol expires git forwardproxy minify gopkg grpc dnsmadeeasy authz datadog nobots route53 locale cache realip ipfilter dyn namecheap webdav mailout cors restic filter awslambda prometheus ns1 awses linode vultr reauth cloudflare cgi googlecloud godaddy ovh ratelimit rackspace azure login jwt
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
 Getting plugin [SUCCESS]m/caddyserver/dnsproviders/pdns 
@@ -294,11 +282,11 @@ Getting plugin [SUCCESS]m/hacdias/caddy-minify
 Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
-Getting plugin [SUCCESS]m/pedronasser/caddy-search 
+Getting plugin [SUCCESS]m/zikes/gopkg 
 Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
-Getting plugin [SUCCESS]m/zikes/gopkg 
+Getting plugin [SUCCESS]m/pieterlouw/caddy-grpc 
 Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
@@ -315,11 +303,6 @@ Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
 Getting plugin [SUCCESS]m/Xumeiquer/nobots 
-Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
-Plugin name filebrowser is not recognized
-Using GPATH : /root/golang/packages
-Ensuring Caddy is up-to-date [SUCCESS]
-Getting plugin [SUCCESS]m/namsral/multipass/caddy 
 Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
@@ -440,35 +423,36 @@ Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Ensure caddy build system dependencies [SUCCESS]
 Disable Telemetry [SUCCESS]
 Rebuilding caddy binary [SUCCESS]
+Caddy is Running .. Stopping process [SUCCESS]
 Copying caddy binary to /root/golang/packages/bin [SUCCESS]
 Copying caddy binary to /usr/local/bin/caddy [SUCCESS]
 Rebuilding caddy binary GCC optimized [SUCCESS]
 Copying caddy GCC optimized binary to /usr/local/bin/caddy-gcc7 [SUCCESS]
 Rebuilding caddy binary Clang optimized [SUCCESS]
 Copying caddy Clang optimized binary to /usr/local/bin/caddy-clang5 [SUCCESS]
--rwxr-xr-x 1 root root 38M Feb 16 03:17 /usr/local/bin/caddy
--rwxr-xr-x 1 root root 38M Feb 16 03:18 /usr/local/bin/caddy-clang5
--rwxr-xr-x 1 root root 38M Feb 16 03:17 /usr/local/bin/caddy-gcc7
+-rwxr-xr-x 1 root root 35M Feb 16 06:49 /usr/local/bin/caddy
+-rwxr-xr-x 1 root root 35M Feb 16 06:49 /usr/local/bin/caddy-clang5
+-rwxr-xr-x 1 root root 35M Feb 16 06:49 /usr/local/bin/caddy-gcc7
 ```
 
 ```
 /usr/local/bin/caddy -version
-Caddy 0.11.4 (+c1d6c92 Sat Feb 16 03:17:37 UTC 2019) (unofficial)
-1 file changed, 45 insertions(+), 1 deletion(-)
+Caddy 0.11.4 (+c1d6c92 Sat Feb 16 06:49:05 UTC 2019) (unofficial)
+1 file changed, 44 insertions(+), 1 deletion(-)
 caddy/caddymain/run.go
 
 /usr/local/bin/caddy-gcc7 -version
-Caddy 0.11.4 (+c1d6c92 Sat Feb 16 03:17:45 UTC 2019) (unofficial)
-1 file changed, 45 insertions(+), 1 deletion(-)
+Caddy 0.11.4 (+c1d6c92 Sat Feb 16 06:49:13 UTC 2019) (unofficial)
+1 file changed, 44 insertions(+), 1 deletion(-)
 caddy/caddymain/run.go
 
 /usr/local/bin/caddy-clang5 -version
-Caddy 0.11.4 (+c1d6c92 Sat Feb 16 03:17:53 UTC 2019) (unofficial)
-1 file changed, 45 insertions(+), 1 deletion(-)
+Caddy 0.11.4 (+c1d6c92 Sat Feb 16 06:49:20 UTC 2019) (unofficial)
+1 file changed, 44 insertions(+), 1 deletion(-)
 caddy/caddymain/run.go
 ```
 
-0.11.3 output
+0.11.4 output
 
 ```
 /usr/local/bin/caddy -plugins
@@ -500,6 +484,7 @@ Other plugins:
   http.forwardproxy
   http.git
   http.gopkg
+  http.grpc
   http.gzip
   http.header
   http.index
@@ -514,7 +499,6 @@ Other plugins:
   http.markdown
   http.mime
   http.minify
-  http.multipass
   http.nobots
   http.pprof
   http.prometheus
@@ -529,7 +513,6 @@ Other plugins:
   http.restic
   http.rewrite
   http.root
-  http.search
   http.secrets
   http.status
   http.templates
