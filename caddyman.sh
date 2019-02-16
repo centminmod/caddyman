@@ -14,9 +14,12 @@ CLANG_FIVE='y'
 CLANG_SIX='n'
 DISABLE_TELEMETRY='y'
 ###############################################################
-mkdir -p /home/caddytemp
-chmod 1777 /home/caddytemp
-export TMPDIR=/home/caddytemp
+setuptmp() {
+    mkdir -p /home/caddytemp
+    chmod 1777 /home/caddytemp
+    export TMPDIR=/home/caddytemp
+}
+setuptmp
 
 if [ ! -d "$GOPATH/src/github.com/mholt/caddy" ]; then
   go get github.com/mholt/caddy/caddy >/dev/null 2>&1
@@ -195,6 +198,7 @@ update_caddy_plugin_imports_and_directives(){
 
 rebuild_caddy(){
     CADDY_PATH=$GOPATH/src/github.com/mholt/caddy
+    setuptmp
 
     cd $CADDY_PATH/caddy
     echo -ne "Ensure caddy build system dependencies\r"

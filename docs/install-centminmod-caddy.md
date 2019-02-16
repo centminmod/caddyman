@@ -11,6 +11,7 @@ rm -rf /etc/systemd/system/caddy.service
 wget https://github.com/mholt/caddy/raw/master/dist/init/linux-systemd/caddy.service -O /etc/systemd/system/caddy.service
 cat /etc/systemd/system/caddy.service
 sed -i 's|ProtectHome=true|ProtectHome=false|' /etc/systemd/system/caddy.service
+sed -i 's|-root=/var/tmp|-root=/usr/local/nginx/html|g' /etc/systemd/system/caddy.service
 sed -i 's|User=www-data|User=nginx|' /etc/systemd/system/caddy.service
 sed -i 's|Group=www-data|Group=nginx|g' /etc/systemd/system/caddy.service
 sed -i 's|NoNewPrivileges=true|NoNewPrivileges=false|'  /etc/systemd/system/caddy.service
@@ -77,7 +78,7 @@ chmod 0666 /usr/local/nginx/logs/caddy-mainhost-errors.log
 touch /usr/local/nginx/logs/caddy-mainhost-access.nossl.log
 chmod 0666 /usr/local/nginx/logs/caddy-mainhost-access.nossl.log
 
-/usr/local/bin/caddy -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp -validate
+/usr/local/bin/caddy -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/usr/local/nginx/html -validate
 
 setcap 'cap_net_bind_service=+ep' /usr/local/bin/caddy
 setcap 'cap_net_bind_service=+ep' /usr/local/bin/caddy-gcc7
@@ -118,12 +119,12 @@ Group=nginx
 Environment=CADDYPATH=/etc/ssl/caddy
 
 ; Always set "-root" to something safe in case it gets forgotten in the Caddyfile.
-;ExecStart=/usr/local/bin/caddy -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
-ExecStart=/usr/local/bin/caddy -log /var/log/caddy.log -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
-; ExecStart=/usr/local/bin/caddy-gcc7 -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
-; ExecStart=/usr/local/bin/caddy-gcc7 -log /var/log/caddy.log -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
-; ExecStart=/usr/local/bin/caddy-clang5 -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
-; ExecStart=/usr/local/bin/caddy-clang5 -log /var/log/caddy.log -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
+;ExecStart=/usr/local/bin/caddy -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/usr/local/nginx/html
+ExecStart=/usr/local/bin/caddy -log /var/log/caddy.log -agree=true -conf=/etc/caddy/Caddyfile -root=/usr/local/nginx/html
+; ExecStart=/usr/local/bin/caddy-gcc7 -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/usr/local/nginx/html
+; ExecStart=/usr/local/bin/caddy-gcc7 -log /var/log/caddy.log -agree=true -conf=/etc/caddy/Caddyfile -root=/usr/local/nginx/html
+; ExecStart=/usr/local/bin/caddy-clang5 -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/usr/local/nginx/html
+; ExecStart=/usr/local/bin/caddy-clang5 -log /var/log/caddy.log -agree=true -conf=/etc/caddy/Caddyfile -root=/usr/local/nginx/html
 ExecReload=/bin/kill -USR1 $MAINPID
 
 ; Use graceful shutdown with a reasonable timeout
