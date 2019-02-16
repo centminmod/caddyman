@@ -242,6 +242,7 @@ Ensuring Caddy is up-to-date [SUCCESS]
 Getting plugin [SUCCESS]m/BTBurke/caddy-jwt 
 Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Ensure caddy build system dependencies [SUCCESS]
+Disable Telemetry [SUCCESS]
 Rebuilding caddy binary [SUCCESS]
 Caddy is Running .. Stopping process [SUCCESS]
 Copying caddy binary to /root/golang/packages/bin [SUCCESS]
@@ -315,10 +316,7 @@ Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
 Getting plugin [SUCCESS]m/Xumeiquer/nobots 
 Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
-Using GPATH : /root/golang/packages
-Ensuring Caddy is up-to-date [SUCCESS]
-Getting plugin [SUCCESS]m/filebrowser/caddy 
-Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
+Plugin name filebrowser is not recognized
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
 Getting plugin [SUCCESS]m/namsral/multipass/caddy 
@@ -440,6 +438,7 @@ Ensuring Caddy is up-to-date [SUCCESS]
 Getting plugin [SUCCESS]m/BTBurke/caddy-jwt 
 Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]
 Ensure caddy build system dependencies [SUCCESS]
+Disable Telemetry [SUCCESS]
 Rebuilding caddy binary [SUCCESS]
 Copying caddy binary to /root/golang/packages/bin [SUCCESS]
 Copying caddy binary to /usr/local/bin/caddy [SUCCESS]
@@ -447,25 +446,25 @@ Rebuilding caddy binary GCC optimized [SUCCESS]
 Copying caddy GCC optimized binary to /usr/local/bin/caddy-gcc7 [SUCCESS]
 Rebuilding caddy binary Clang optimized [SUCCESS]
 Copying caddy Clang optimized binary to /usr/local/bin/caddy-clang5 [SUCCESS]
--rwxr-xr-x 1 root root 58M Feb 15 08:48 /usr/local/bin/caddy
--rwxr-xr-x 1 root root 58M Feb 15 08:48 /usr/local/bin/caddy-clang5
--rwxr-xr-x 1 root root 58M Feb 15 08:48 /usr/local/bin/caddy-gcc7
+-rwxr-xr-x 1 root root 38M Feb 16 03:17 /usr/local/bin/caddy
+-rwxr-xr-x 1 root root 38M Feb 16 03:18 /usr/local/bin/caddy-clang5
+-rwxr-xr-x 1 root root 38M Feb 16 03:17 /usr/local/bin/caddy-gcc7
 ```
 
 ```
 /usr/local/bin/caddy -version
-Caddy 0.11.3 (+39c5d6b Fri Feb 15 07:36:57 UTC 2019) (unofficial)
-1 file changed, 45 insertions(+)
+Caddy 0.11.4 (+c1d6c92 Sat Feb 16 03:17:37 UTC 2019) (unofficial)
+1 file changed, 45 insertions(+), 1 deletion(-)
 caddy/caddymain/run.go
 
 /usr/local/bin/caddy-gcc7 -version
-Caddy 0.11.3 (+39c5d6b Fri Feb 15 07:37:14 UTC 2019) (unofficial)
-1 file changed, 45 insertions(+)
+Caddy 0.11.4 (+c1d6c92 Sat Feb 16 03:17:45 UTC 2019) (unofficial)
+1 file changed, 45 insertions(+), 1 deletion(-)
 caddy/caddymain/run.go
 
 /usr/local/bin/caddy-clang5 -version
-Caddy 0.11.3 (+39c5d6b Fri Feb 15 07:37:23 UTC 2019) (unofficial)
-1 file changed, 45 insertions(+)
+Caddy 0.11.4 (+c1d6c92 Sat Feb 16 03:17:53 UTC 2019) (unofficial)
+1 file changed, 45 insertions(+), 1 deletion(-)
 caddy/caddymain/run.go
 ```
 
