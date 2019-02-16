@@ -208,6 +208,7 @@ rebuild_caddy(){
     cd $CADDY_PATH/caddy
     echo -ne "Ensure caddy build system dependencies\r"
     go get -v github.com/caddyserver/builds
+    go get -u github.com/caddyserver/builds
     echo "Ensure caddy build system dependencies [SUCCESS]"
 
     if [[ "$SPONSORHEADER" = [Nn] ]]; then

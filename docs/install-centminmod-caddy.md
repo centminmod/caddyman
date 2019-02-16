@@ -118,9 +118,12 @@ Group=nginx
 Environment=CADDYPATH=/etc/ssl/caddy
 
 ; Always set "-root" to something safe in case it gets forgotten in the Caddyfile.
-ExecStart=/usr/local/bin/caddy -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
+;ExecStart=/usr/local/bin/caddy -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
+ExecStart=/usr/local/bin/caddy -log /var/log/caddy.log -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
 ; ExecStart=/usr/local/bin/caddy-gcc7 -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
+; ExecStart=/usr/local/bin/caddy-gcc7 -log /var/log/caddy.log -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
 ; ExecStart=/usr/local/bin/caddy-clang5 -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
+; ExecStart=/usr/local/bin/caddy-clang5 -log /var/log/caddy.log -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
 ExecReload=/bin/kill -USR1 $MAINPID
 
 ; Use graceful shutdown with a reasonable timeout
