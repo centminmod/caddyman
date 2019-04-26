@@ -410,7 +410,7 @@ rebuild_caddy(){
                 echo ""
                 ls -lah /usr/local/bin/caddy*
                 echo ""
-                echo "check $$GOMODULE_FILE"
+                echo "check $GOMODULE_FILE"
                 cat "$GOMODULE_FILE"
                 echo ""
                 echo "caddy -version"
