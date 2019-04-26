@@ -113,7 +113,7 @@ update_caddy(){
     echo -ne "Ensuring Caddy is up-to-date \r"
     export CC=gcc
     export GO111MODULE=on
-    go get $CADDY_GO_PACKAGE
+    # go get $CADDY_GO_PACKAGE
     go get -u $CADDY_GO_PACKAGE
     echo "Ensuring Caddy is up-to-date [SUCCESS]"
 }
@@ -205,15 +205,12 @@ update_caddy_plugin_imports_and_directives(){
     url=$1
     directive=$2
 
-    setup_custom_module_file
-
     echo -ne "Updating plugin imports in $GOMODULE_FILE\r"
     # echo "Check $GOMODULE_FILE existence"
     # echo "ls -lAh $GOMODULE_FILE"
     # ls -lAh "$GOMODULE_FILE"
     sed -i "s%plug in plugins here, for example%plug in plugins here, for example\n_ \"$url\"%g" "$GOMODULE_FILE"
     gofmt -w "$GOMODULE_FILE"
-    go mod init caddy
     echo -ne "Updating plugin imports in $GOMODULE_FILE [SUCCESS]\r"
     echo ""
 
@@ -233,6 +230,7 @@ rebuild_caddy(){
 
     # cd $CADDY_PATH/caddy
     echo -ne "Building caddy binaries\r"
+    go mod init caddy
     go get github.com/mholt/caddy/caddy
     go get github.com/caddyserver/builds
     # export GIT_TERMINAL_PROMPT=1
@@ -413,6 +411,11 @@ rebuild_caddy(){
                 echo ""
                 ls -lah /usr/local/bin/caddy*
                 echo ""
+                echo "caddy -version"
+                caddy -version
+                echo
+                echo "caddy -plugins"
+                caddy -plugins
             fi
         fi
     fi
@@ -423,8 +426,9 @@ install(){
     export CC="gcc"
     export CXX="g++"
     export GO111MODULE=on
+    rm -rf "$GOMODULE_FILE"  go.mod  go.sum
     check_go_path
-    update_caddy
+    # update_caddy
 
     url=$1
     directive=$2
@@ -434,6 +438,7 @@ install(){
         install_hugo
     fi
 
+    setup_custom_module_file
     install_plugin $url
     update_caddy_plugin_imports_and_directives $url $directive
 }
