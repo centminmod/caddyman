@@ -401,7 +401,7 @@ All plugins
 
 ```
 ./caddyman.sh updatesrc
-./caddyman.sh install pdns digitalocean upload proxyprotocol expires git forwardproxy minify gopkg grpc dnsmadeeasy authz datadog nobots route53 locale cache realip ipfilter dyn namecheap webdav mailout cors restic filter awslambda prometheus ns1 awses linode vultr reauth cloudflare cgi googlecloud godaddy ovh ratelimit rackspace azure login jwt geoip s3browser
+./caddyman.sh install pdns digitalocean upload proxyprotocol expires git forwardproxy minify gopkg grpc dnsmadeeasy authz datadog nobots route53 locale cache realip ipfilter dyn namecheap webdav mailout cors filter awslambda prometheus ns1 awses linode vultr reauth cloudflare cgi googlecloud godaddy ovh ratelimit rackspace azure login jwt geoip s3browser
 Using GPATH : /root/golang/packages
 Ensuring Caddy is up-to-date [SUCCESS]
 Getting plugin [SUCCESS]m/caddyserver/dnsproviders/pdns 
