@@ -2,6 +2,8 @@
 ###############################################################
 SPONSORHEADER='n'
 CADDY_BIN='/usr/local/bin/caddy'
+CADDY_PATH="$GOPATH/src/github.com/mholt/caddy"
+GOMODULE_FILE="custom_gomodule.go"
 
 CUSTOM_GCCCOMPILED='y'
 CUSTOM_CLANGCOMPILED='y'
@@ -22,7 +24,11 @@ setuptmp() {
 setuptmp
 
 if [ ! -d "$GOPATH/src/github.com/mholt/caddy" ]; then
+  export GO111MODULE=on
   go get github.com/mholt/caddy/caddy >/dev/null 2>&1
+# # else
+# #   rm -rf "$GOPATH/src/github.com/mholt/caddy"
+# #   go get github.com/mholt/caddy/caddy >/dev/null 2>&1
 fi
 
 # Dictionary with plugin name as key, URL as value
@@ -105,6 +111,7 @@ update_caddy(){
     CADDY_GO_PACKAGE=github.com/mholt/caddy
     echo -ne "Ensuring Caddy is up-to-date \r"
     export CC=gcc
+    export GO111MODULE=on
     go get $CADDY_GO_PACKAGE
     go get -u $CADDY_GO_PACKAGE
     echo "Ensuring Caddy is up-to-date [SUCCESS]"
@@ -159,6 +166,25 @@ install_hugo(){
     echo "Installing Hugo [SUCCESS]"
 }
 
+setup_custom_module_file() {
+cat > "$GOMODULE_FILE" <<EOF
+package main
+
+import (
+    "github.com/mholt/caddy/caddy/caddymain"
+    
+    // plug in plugins here, for example
+
+)
+
+func main() {
+    // optional: disable telemetry
+    caddymain.EnableTelemetry = false
+    caddymain.Run()
+}
+EOF
+}
+
 install_plugin(){
     echo -ne "Getting plugin $1 \r"
     go get $1
@@ -173,26 +199,30 @@ install_plugin(){
 
 update_caddy_plugin_imports_and_directives(){
 
-    CADDY_PATH=$GOPATH/src/github.com/mholt/caddy
     PLUGINS_FILE=$CADDY_PATH/caddyhttp/httpserver/plugin.go
-    MAIN_FILE=$CADDY_PATH/caddy/caddymain/run.go
 
     url=$1
     directive=$2
 
-    echo -ne 'Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go\r'
-    sed -i "s%This is where other plugins get plugged in (imported)%This is where other plugins get plugged in (imported)\n_ \"$url\"%g" $MAIN_FILE
-    gofmt -w $MAIN_FILE
-    echo -ne 'Updating plugin imports in $CADDY_PATH/caddy/caddymain/run.go [SUCCESS]\r'
+    setup_custom_module_file
+
+    echo -ne "Updating plugin imports in $GOMODULE_FILE\r"
+    # echo "Check $GOMODULE_FILE existence"
+    # echo "ls -lAh $GOMODULE_FILE"
+    # ls -lAh "$GOMODULE_FILE"
+    sed -i "s%plug in plugins here, for example%plug in plugins here, for example\n_ \"$url\"%g" "$GOMODULE_FILE"
+    gofmt -w "$GOMODULE_FILE"
+    go mod init caddy
+    echo -ne "Updating plugin imports in $GOMODULE_FILE [SUCCESS]\r"
     echo ""
 
-    if [ ! $directive == "" ]; then
-        echo -ne "Updating plugin directive in $PLUGINS_FILE\r"
-        sed -i "/\"prometheus\",/a \"$directive\"," $PLUGINS_FILE
-        gofmt -w $MAIN_FILE
-        echo -ne "Updating plugin directive in $PLUGINS_FILE [SUCCESS]\r"
-        echo ""
-    fi
+    # if [ ! $directive == "" ]; then
+    #     echo -ne "Updating plugin directive in $PLUGINS_FILE\r"
+    #     sed -i "/\"prometheus\",/a \"$directive\"," $PLUGINS_FILE
+    #     gofmt -w $GOMODULE_FILE
+    #     echo -ne "Updating plugin directive in $PLUGINS_FILE [SUCCESS]\r"
+    #     echo ""
+    # fi
 
 }
 
@@ -201,10 +231,12 @@ rebuild_caddy(){
     setuptmp
 
     cd $CADDY_PATH/caddy
-    echo -ne "Ensure caddy build system dependencies\r"
-    go get -v github.com/caddyserver/builds
-    go get -u github.com/caddyserver/builds
-    echo "Ensure caddy build system dependencies [SUCCESS]"
+    echo -ne "Building caddy binaries\r"
+    go get github.com/mholt/caddy/caddy
+    # export GIT_TERMINAL_PROMPT=1
+    # go get -v github.com/caddyserver/builds
+    # go get -u github.com/caddyserver/builds
+    # echo "Ensure caddy build system dependencies [SUCCESS]"
 
     if [[ "$SPONSORHEADER" = [Nn] ]]; then
         SERVERGOPATH="$GOPATH/src/github.com/mholt/caddy/caddyhttp/httpserver/server.go"
@@ -221,7 +253,7 @@ rebuild_caddy(){
 
     if [[ "$DISABLE_TELEMETRY" = [yY] ]]; then
         echo "Disable Telemetry [SUCCESS]"
-        sed -i 's|EnableTelemetry = true|EnableTelemetry = false|' $CADDY_PATH/caddy/caddymain/run.go
+        sed -i 's|caddymain.EnableTelemetry .*|caddymain.EnableTelemetry = false|' "$GOMODULE_FILE"
     fi
 
     if [[ "$(uname -m)" = 'x86_64' ]]; then
@@ -239,7 +271,7 @@ rebuild_caddy(){
     export CGO_CXXFLAGS="-g -O2"
     export CGO_FFLAGS="-g -O2"
     export CGO_LDFLAGS="-g -O2"
-    go run build.go -goos=linux -goarch=amd64
+    go build
     echo "Rebuilding caddy binary [SUCCESS]"
 
     if pgrep -x "caddy" > /dev/null
@@ -311,7 +343,7 @@ rebuild_caddy(){
             export CGO_FFLAGS="-g -O3"
             export CGO_LDFLAGS="-g -O3"
         
-            go run build.go -goos=linux -goarch=amd64
+            go build
             echo "Rebuilding caddy binary GCC optimized [SUCCESS]"
         
             \cp -f caddy "${CADDY_BIN}${SUFFIX}"
@@ -364,7 +396,7 @@ rebuild_caddy(){
             export CGO_FFLAGS="-g -O3"
             export CGO_LDFLAGS="-g -O3"
         
-            go run build.go -goos=linux -goarch=amd64
+            go build
             echo "Rebuilding caddy binary Clang optimized [SUCCESS]"
         
             \cp -f caddy "${CADDY_BIN}${SUFFIX}"
@@ -388,6 +420,7 @@ rebuild_caddy(){
 install(){
     export CC="gcc"
     export CXX="g++"
+    export GO111MODULE=on
     check_go_path
     update_caddy
 
