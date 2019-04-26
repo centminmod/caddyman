@@ -9,8 +9,8 @@ CUSTOM_GCCCOMPILED='y'
 CUSTOM_CLANGCOMPILED='y'
 DEVTOOLSETFOUR='n'
 DEVTOOLSETSIX='n'
-DEVTOOLSETSEVEN='y'
-DEVTOOLSETEIGHT='n'
+DEVTOOLSETSEVEN='n'
+DEVTOOLSETEIGHT='y'
 CLANG_FOUR='n'
 CLANG_FIVE='y'
 CLANG_SIX='n'
@@ -109,7 +109,6 @@ update_caddymaster() {
 
 update_caddy(){
     CADDY_GO_PACKAGE=github.com/mholt/caddy
-    rm -rf "$GOMODULE_FILE"  go.mod  go.sum
     echo -ne "Ensuring Caddy is up-to-date \r"
     export CC=gcc
     export GO111MODULE=on
@@ -411,6 +410,9 @@ rebuild_caddy(){
                 echo ""
                 ls -lah /usr/local/bin/caddy*
                 echo ""
+                echo "check $$GOMODULE_FILE"
+                cat "$GOMODULE_FILE"
+                echo ""
                 echo "caddy -version"
                 caddy -version
                 echo
@@ -426,7 +428,6 @@ install(){
     export CC="gcc"
     export CXX="g++"
     export GO111MODULE=on
-    rm -rf "$GOMODULE_FILE"  go.mod  go.sum
     check_go_path
     # update_caddy
 
@@ -438,7 +439,6 @@ install(){
         install_hugo
     fi
 
-    setup_custom_module_file
     install_plugin $url
     update_caddy_plugin_imports_and_directives $url $directive
 }
@@ -486,6 +486,8 @@ if [ $1 == "install" ]; then
     if [ $# -lt 2 ]; then
         show_usage
     else
+        rm -rf "$GOMODULE_FILE"  go.mod  go.sum
+        setup_custom_module_file
         for plugin_name in ${@:2}; do
             install_plugin_by_name ${plugin_name}
         done
@@ -498,6 +500,8 @@ if [ $1 == "install_url" ]; then
     if [[ $# -lt 2  || ($# -gt 3) ]]; then
         show_usage
     else
+        rm -rf "$GOMODULE_FILE"  go.mod  go.sum
+        setup_custom_module_file
         install $2 $3
         rebuild_caddy
     fi
