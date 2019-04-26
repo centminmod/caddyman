@@ -109,6 +109,7 @@ update_caddymaster() {
 
 update_caddy(){
     CADDY_GO_PACKAGE=github.com/mholt/caddy
+    rm -rf "$GOMODULE_FILE"  go.mod  go.sum
     echo -ne "Ensuring Caddy is up-to-date \r"
     export CC=gcc
     export GO111MODULE=on
@@ -230,9 +231,10 @@ rebuild_caddy(){
     CADDY_PATH=$GOPATH/src/github.com/mholt/caddy
     setuptmp
 
-    cd $CADDY_PATH/caddy
+    # cd $CADDY_PATH/caddy
     echo -ne "Building caddy binaries\r"
     go get github.com/mholt/caddy/caddy
+    go get github.com/caddyserver/builds
     # export GIT_TERMINAL_PROMPT=1
     # go get -v github.com/caddyserver/builds
     # go get -u github.com/caddyserver/builds
